@@ -18,7 +18,8 @@ from rest_framework.views import APIView
 from rest_framework import mixins
 from rest_framework import generics
 from rest_framework import generics, permissions, renderers
-from cart.serializers import OrderSerializer
+from cart.serializers import OrderSerializer, OrderItemSerializer, CartSerializer, CartItemSerializer
+from cart.permissions import HasAccessToObject
 
 
 class CartListView(LoginRequiredMixin, ListView):
@@ -31,9 +32,9 @@ class CartListView(LoginRequiredMixin, ListView):
 
 
 
-class APIOrderList(mixins.ListModelMixin,
-                   generics.GenericAPIView):
+class APIOrderList(generics.ListAPIView):
     serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user)
@@ -45,7 +46,32 @@ class APIOrderList(mixins.ListModelMixin,
 class APIOrderDetail(generics.RetrieveAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated, HasAccessToObject]
 
+
+class APICartDetail(generics.RetrieveAPIView):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+    permission_classes = [permissions.IsAuthenticated, HasAccessToObject]
+
+
+class APICartItemListView(generics.ListCreateAPIView):
+    serializer_class = CartItemSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(cart=Cart.objects.get(id=self.kwargs['pk']))
+
+    def get_queryset(self):
+        return Cart.objects.get(id=self.kwargs['pk']).get_cart_items()
+
+
+class APICartItemDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = CartItemSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return CartItem.objects.filter(cart=self.kwargs['c_k'])
 
 
 class OrderDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):

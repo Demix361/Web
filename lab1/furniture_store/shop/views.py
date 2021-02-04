@@ -16,7 +16,7 @@ from rest_framework import mixins
 from rest_framework import generics
 from rest_framework import generics, permissions, renderers
 from shop.serializers import ProductSerializer
-from shop.permissions import CanInteractWithProduct, IsAdminOrReadOnly
+from shop.permissions import IsAdminOrReadOnly
 
 
 class ProductListView(ListView):
@@ -208,7 +208,6 @@ class ProductDetailView(DetailView):
                                                                                                              flat=True)
         context['product_features'] = FeatureSet.objects.filter(product=self.get_object())
         return context
-
 
 
 class APIProductList(generics.ListCreateAPIView):
