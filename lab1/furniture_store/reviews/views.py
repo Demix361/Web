@@ -28,8 +28,9 @@ class APIReviewList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
                           CanCreateReview]
 
+
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(user=self.request.user, product=Product.objects.get(id=self.kwargs['pk']))
 
     def get_queryset(self):
         return Review.objects.filter(product=self.kwargs['pk'])

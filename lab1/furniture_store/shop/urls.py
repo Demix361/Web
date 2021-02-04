@@ -6,8 +6,8 @@ from .views import ProductListView, ProductDetailView, ProductCategoryDetailView
 
 urlpatterns = [
     path('', api_root),
-    path('shop/', APIProductList.as_view(), name='product-list'),
-    path('shop/<int:pk>/', APIProductDetail.as_view(), name='product-detail'),
+    path('products/', APIProductList.as_view(), name='product-list'),
+    path('products/<int:pk>/', APIProductDetail.as_view(), name='product-detail'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
