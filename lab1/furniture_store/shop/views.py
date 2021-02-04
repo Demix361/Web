@@ -16,6 +16,8 @@ from rest_framework import mixins
 from rest_framework import generics
 from rest_framework import generics, permissions, renderers
 from shop.serializers import ProductSerializer
+from shop.permissions import CanInteractWithProduct, IsAdminOrReadOnly
+
 
 class ProductListView(ListView):
     model = Product
@@ -209,17 +211,18 @@ class ProductDetailView(DetailView):
 
 
 
-class APIProductList(generics.ListAPIView):
+class APIProductList(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
 
-class APIProductDetail(generics.RetrieveAPIView):
+class APIProductDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
 
-#class APICategoryDetail():
 
 @api_view(['GET'])
 def api_root(request, format=None):

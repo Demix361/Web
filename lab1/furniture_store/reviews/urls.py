@@ -5,8 +5,8 @@ from .views import ReviewCreateView, ReviewUpdateView, ReviewDeleteView, \
 
 
 urlpatterns = [
-    path('shop/<int:pk>/reviews/', APIReviewList.as_view(), name='api-review-list'),
-    path('shop/<int:prod>/reviews/<int:pk>/', APIReviewDetail.as_view(), name='api-review-detail'),
+    path('products/<int:pk>/reviews/', APIReviewList.as_view(), name='api-review-list'),
+    path('products/<int:prod>/reviews/<int:pk>/', APIReviewDetail.as_view(), name='api-review-detail'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
