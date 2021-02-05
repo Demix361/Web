@@ -18,8 +18,9 @@ from rest_framework.views import APIView
 from rest_framework import mixins
 from rest_framework import generics
 from rest_framework import generics, permissions, renderers
-from cart.serializers import OrderSerializer, OrderItemSerializer, CartSerializer, CartItemSerializer
-from cart.permissions import HasAccessToObject
+from cart.serializers import OrderSerializer, OrderItemSerializer, CartSerializer, \
+    CartItemSerializer, CartItemPUTSerializer
+from cart.permissions import HasAccessToObject, IsUserCart, IsUserCartItem
 
 
 class CartListView(LoginRequiredMixin, ListView):
@@ -55,20 +56,24 @@ class APICartDetail(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated, HasAccessToObject]
 
 
+# (Protected) POST: product, quantity
 class APICartItemListView(generics.ListCreateAPIView):
     serializer_class = CartItemSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsUserCart]
 
+    # Нельзя сохранить, если такой товар уже есть в корзине
     def perform_create(self, serializer):
-        serializer.save(cart=Cart.objects.get(id=self.kwargs['pk']))
+        if len(self.get_queryset().filter(product=self.request.data['product'])) == 0:
+            serializer.save(cart=Cart.objects.get(id=self.kwargs['pk']))
 
     def get_queryset(self):
         return Cart.objects.get(id=self.kwargs['pk']).get_cart_items()
 
 
+# (Protected) DEL, PUT: quantity
 class APICartItemDetailView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = CartItemSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = CartItemPUTSerializer
+    permission_classes = [permissions.IsAuthenticated, IsUserCartItem]
 
     def get_queryset(self):
         return CartItem.objects.filter(cart=self.kwargs['c_k'])

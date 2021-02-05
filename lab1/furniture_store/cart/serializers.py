@@ -26,3 +26,12 @@ class CartItemSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = CartItem
 		fields = '__all__'
+
+
+class CartItemPUTSerializer(serializers.ModelSerializer):
+	cart = serializers.ReadOnlyField(source='cart.id')
+	product = serializers.ReadOnlyField(source='product.id')
+
+	class Meta:
+		model = CartItem
+		fields = '__all__'
