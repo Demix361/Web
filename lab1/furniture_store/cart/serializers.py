@@ -3,6 +3,8 @@ from cart.models import Order, OrderItem, Cart, CartItem
 
 
 class OrderSerializer(serializers.ModelSerializer):
+	user = serializers.ReadOnlyField(source='user.id')
+
 	class Meta:
 		model = Order
 		fields = '__all__'

@@ -20,34 +20,44 @@ from rest_framework import generics
 from rest_framework import generics, permissions, renderers
 from cart.serializers import OrderSerializer, OrderItemSerializer, CartSerializer, \
     CartItemSerializer, CartItemPUTSerializer
-from cart.permissions import HasAccessToObject, IsUserCart, IsUserCartItem
+from cart.permissions import HasAccessToObject, IsUserCart, IsUserCartItem, \
+    IsUserOrderItem, IsUserOrderItemDetail
 
 
-class CartListView(LoginRequiredMixin, ListView):
-    model = Cart
-    template_name = 'cart/cart_list.html'
-    context_object_name = 'cart'
-
-    def get_queryset(self):
-        return Cart.objects.get(user=self.request.user)
-
-
-
-class APIOrderList(generics.ListAPIView):
+# orders/
+class APIOrderList(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user)
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
+    def perform_create(self, serializer):
+        if not Cart.objects.get(user=self.request.user).is_empty():
+            serializer.save(user=self.request.user)
 
 
+# (Protected) orders/<pk>/
 class APIOrderDetail(generics.RetrieveAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated, HasAccessToObject]
+
+
+# orders/<pk>/orderitems/
+class APIOrderItemList(generics.ListAPIView):
+    serializer_class = OrderItemSerializer
+    permission_classes = [permissions.IsAuthenticated, IsUserOrderItem]
+
+    def get_queryset(self):
+        return OrderItem.objects.filter(order=self.kwargs['pk'])
+
+
+# orders/<o_k>/orderitems/<pk>/
+class APIOrderItemDetail(generics.RetrieveAPIView):
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderItemSerializer
+    permission_classes = [permissions.IsAuthenticated, IsUserOrderItemDetail]
 
 
 class APICartDetail(generics.RetrieveAPIView):
@@ -57,7 +67,7 @@ class APICartDetail(generics.RetrieveAPIView):
 
 
 # (Protected) POST: product, quantity
-class APICartItemListView(generics.ListCreateAPIView):
+class APICartItemList(generics.ListCreateAPIView):
     serializer_class = CartItemSerializer
     permission_classes = [permissions.IsAuthenticated, IsUserCart]
 
@@ -71,12 +81,25 @@ class APICartItemListView(generics.ListCreateAPIView):
 
 
 # (Protected) DEL, PUT: quantity
-class APICartItemDetailView(generics.RetrieveUpdateDestroyAPIView):
+class APICartItemDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CartItemPUTSerializer
     permission_classes = [permissions.IsAuthenticated, IsUserCartItem]
 
     def get_queryset(self):
         return CartItem.objects.filter(cart=self.kwargs['c_k'])
+
+
+
+
+
+
+class CartListView(LoginRequiredMixin, ListView):
+    model = Cart
+    template_name = 'cart/cart_list.html'
+    context_object_name = 'cart'
+
+    def get_queryset(self):
+        return Cart.objects.get(user=self.request.user)
 
 
 class OrderDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
