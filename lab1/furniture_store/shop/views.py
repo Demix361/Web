@@ -19,6 +19,7 @@ from shop.serializers import ProductSerializer
 from shop.permissions import IsAdminOrReadOnly
 
 
+
 class ProductListView(ListView):
     model = Product
     context_object_name = 'products'
