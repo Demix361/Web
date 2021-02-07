@@ -4,3 +4,5 @@
 lab1/access.log
 lab1/error.log
 lab1/furniture_store/db.sqlite3
+
+*.log
