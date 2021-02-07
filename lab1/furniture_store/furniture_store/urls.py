@@ -8,6 +8,7 @@ from rest_framework_swagger.views import get_swagger_view
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 
 
 urlpatterns = [
@@ -32,7 +33,11 @@ schema_view = get_schema_view(
 )
 
 urlpatterns += [
-    path('api-auth/', include('rest_framework.urls')),
+    path('api/v1/api-token-auth/', obtain_jwt_token),
+    path('api/v1/api-token-refresh/', refresh_jwt_token),
+    path('api/v1/api-token-verify/', verify_jwt_token),
+    path('api/v1/api-auth/', include('rest_framework.urls')),
+    path('api/v1/register/', include('rest_registration.api.urls')),
     path('api/v1/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
 
