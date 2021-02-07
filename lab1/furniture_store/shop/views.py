@@ -223,6 +223,9 @@ class APIProductDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminOrReadOnly]
 
 
+def hello(request):
+    return render(request, 'shop/index.html')
+
 
 @api_view(['GET'])
 def api_root(request, format=None):

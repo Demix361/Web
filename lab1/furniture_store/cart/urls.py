@@ -20,16 +20,16 @@ from .views import (
 )
 
 urlpatterns = [
-    path('orders/', APIOrderList.as_view(), name='api-order-list'),
-    path('orders/<int:pk>/', APIOrderDetail.as_view(), name='api-order-detail'),
-    path('orders/<int:pk>/orderitems/', APIOrderItemList.as_view(), name='api-orderitem-list'),
-    path('orders/<int:o_k>/orderitems/<int:pk>', APIOrderItemDetail.as_view(), name='api-orderitem-detail'),
-    path('carts/<int:pk>/', APICartDetail.as_view(), name='api-cart-detail'),
-    path('carts/<int:pk>/cartitems/', APICartItemList.as_view(), name='api-cartitem-list'),
-    path('carts/<int:c_k>/cartitems/<int:pk>', APICartItemDetail.as_view(), name='api-cartitem-detail'),
+    path('api/v1/orders/', APIOrderList.as_view(), name='api-order-list'),
+    path('api/v1/orders/<int:pk>/', APIOrderDetail.as_view(), name='api-order-detail'),
+    path('api/v1/orders/<int:pk>/orderitems/', APIOrderItemList.as_view(), name='api-orderitem-list'),
+    path('api/v1/orders/<int:o_k>/orderitems/<int:pk>', APIOrderItemDetail.as_view(), name='api-orderitem-detail'),
+    path('api/v1/carts/<int:pk>/', APICartDetail.as_view(), name='api-cart-detail'),
+    path('api/v1/carts/<int:pk>/cartitems/', APICartItemList.as_view(), name='api-cartitem-list'),
+    path('api/v1/carts/<int:c_k>/cartitems/<int:pk>', APICartItemDetail.as_view(), name='api-cartitem-detail'),
 ]
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+#urlpatterns = format_suffix_patterns(urlpatterns)
 
 urlpatterns += [
     path('legacy/cart/', CartListView.as_view(), name='cart'),
