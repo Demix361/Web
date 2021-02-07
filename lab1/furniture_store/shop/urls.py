@@ -1,11 +1,12 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 from .views import ProductListView, ProductDetailView, ProductCategoryDetailView,\
-    APIProductList, APIProductDetail, api_root, hello
+    APIProductList, APIProductDetail, api_root, hello, test
 
 
 urlpatterns = [
-    path('', hello),
+    path('', hello, name='index'),
+    path('test/', test),
     path('api/v1/products/', APIProductList.as_view(), name='product-list'),
     path('api/v1/products/<int:pk>/', APIProductDetail.as_view(), name='product-detail'),
 ]

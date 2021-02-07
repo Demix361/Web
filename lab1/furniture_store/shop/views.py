@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
 from django.db.models import Q
 from .models import Product, Category, Feature, FeatureVariant, FeatureSet, Color
@@ -225,6 +224,9 @@ class APIProductDetail(generics.RetrieveUpdateDestroyAPIView):
 
 def hello(request):
     return render(request, 'shop/index.html')
+
+def test(request):
+    return redirect('index')
 
 
 @api_view(['GET'])
