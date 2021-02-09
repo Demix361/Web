@@ -16,40 +16,39 @@ Completed 10000 requests
 Finished 10000 requests
 
 
-Server Software:        nginx/1.18.0
+Server Software:        Shop
 Server Hostname:        127.0.0.1
 Server Port:            80
 
-Document Path:          /
-Document Length:        162 bytes
+Document Path:          /api
+Document Length:        2224 bytes
 
 Concurrency Level:      10
-Time taken for tests:   1.931 seconds
+Time taken for tests:   65.178 seconds
 Complete requests:      10000
 Failed requests:        0
-Non-2xx responses:      10000
-Total transferred:      3210000 bytes
-HTML transferred:       1620000 bytes
-Requests per second:    5179.68 [#/sec] (mean)
-Time per request:       1.931 [ms] (mean)
-Time per request:       0.193 [ms] (mean, across all concurrent requests)
-Transfer rate:          1623.71 [Kbytes/sec] received
+Total transferred:      26770000 bytes
+HTML transferred:       22240000 bytes
+Requests per second:    153.43 [#/sec] (mean)
+Time per request:       65.178 [ms] (mean)
+Time per request:       6.518 [ms] (mean, across all concurrent requests)
+Transfer rate:          401.09 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    0   0.1      0       4
-Processing:     0    2   1.0      2      21
-Waiting:        0    2   1.0      2      21
-Total:          1    2   1.0      2      21
+Connect:        0    0   0.0      0       0
+Processing:    25   65   9.3     64     158
+Waiting:       25   65   9.3     64     158
+Total:         26   65   9.3     64     158
 
 Percentage of the requests served within a certain time (ms)
-  50%      2
-  66%      2
-  75%      2
-  80%      2
-  90%      2
-  95%      3
-  98%      5
-  99%      6
- 100%     21 (longest request)
+  50%     64
+  66%     67
+  75%     69
+  80%     70
+  90%     76
+  95%     82
+  98%     92
+  99%     98
+ 100%    158 (longest request)
 

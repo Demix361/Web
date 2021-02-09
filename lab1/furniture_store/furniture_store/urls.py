@@ -37,7 +37,7 @@ urlpatterns += [
     path('api/v1/api-token-refresh/', refresh_jwt_token),
     path('api/v1/api-token-verify/', verify_jwt_token),
     path('api/v1/api-auth/', include('rest_framework.urls')),
-    path('api/v1/register/', include('rest_registration.api.urls')),
+    path('api/v1/accounts/', include('rest_registration.api.urls')),
     path('api/v1/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
 
