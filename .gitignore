@@ -1,8 +1,6 @@
 *.idea*
 *__pycache__*
 
-lab1/access.log
-lab1/error.log
+lab1/logs/access.log
+lab1/logs/error.log
 lab1/furniture_store/db.sqlite3
-
-*.log

@@ -25,7 +25,7 @@ SECRET_KEY = '+2%*z0@56eukrktl8cu43r+-kooi*0!j^h4x55i4y5emj)%##8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['backend','127.0.0.1']
+ALLOWED_HOSTS = ['backend','127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -126,6 +126,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#STATICFILES_DIRS = [
+#    os.path.join(BASE_DIR, 'static'),
+#    #'/usr/local/lib/python3.6/site-packages/django/contrib/admin/static',
+#]
 
 AUTH_USER_MODEL = 'users.MyUser'
 
