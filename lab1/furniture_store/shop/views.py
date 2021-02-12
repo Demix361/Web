@@ -1,22 +1,34 @@
+from functools import reduce
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
 from django.db.models import Q
-from .models import Product, Category, Feature, FeatureVariant, FeatureSet, Color
-from cart.models import Cart, Order, OrderItem
-from functools import reduce
+from django.http import Http404
 
 from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
-from rest_framework import status
 from rest_framework.response import Response
-from django.http import Http404
 from rest_framework.views import APIView
-from rest_framework import mixins
-from rest_framework import generics
-from rest_framework import generics, permissions, renderers
+from rest_framework import generics, permissions, renderers, mixins, status
+
+from shop.models import Product, Category, Feature, FeatureVariant, FeatureSet, Color
+from cart.models import Cart, Order, OrderItem
 from shop.serializers import ProductSerializer
 from shop.permissions import IsAdminOrReadOnly
+from shop.logic import ProductLogic
 
+
+class APIProductList(generics.ListCreateAPIView):
+    #queryset = Product.objects.all()
+    queryset = ProductLogic.get_all()
+    serializer_class = ProductSerializer
+    permission_classes = [IsAdminOrReadOnly, permissions.IsAuthenticated]
+
+
+class APIProductDetail(generics.RetrieveUpdateDestroyAPIView):
+    #queryset = Product.objects.all()
+    queryset = ProductLogic.get_all()
+    serializer_class = ProductSerializer
+    permission_classes = [IsAdminOrReadOnly, permissions.IsAuthenticated]
 
 
 class ProductListView(ListView):
@@ -208,29 +220,3 @@ class ProductDetailView(DetailView):
                                                                                                              flat=True)
         context['product_features'] = FeatureSet.objects.filter(product=self.get_object())
         return context
-
-
-class APIProductList(generics.ListCreateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-class APIProductDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-
-def hello(request):
-    return render(request, 'shop/index.html')
-
-def test(request):
-    return redirect('index')
-
-
-@api_view(['GET'])
-def api_root(request, format=None):
-    return Response({
-        'products': reverse('product-list', request=request, format=format)
-    })

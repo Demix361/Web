@@ -7,45 +7,47 @@ from django.views.generic import (
     UpdateView,
     DeleteView
 )
-from reviews.models import Review
-from reviews.serializers import ReviewSerializer
-from reviews.permissions import CanCreateReview, CanAlterReview
-from shop.models import Product
+from django.http import Http404
 
 from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
-from rest_framework import status
 from rest_framework.response import Response
-from django.http import Http404
 from rest_framework.views import APIView
-from rest_framework import mixins
-from rest_framework import generics
-from rest_framework import generics, permissions, renderers
+from rest_framework import generics, permissions, renderers, status, mixins
+
+from reviews.models import Review
+from shop.models import Product
+from reviews.serializers import ReviewSerializer
+from reviews.permissions import CanCreateReview, CanAlterReview
+from reviews.logic import ReviewLogic
+from shop.logic import ProductLogic
 
 
 class APIReviewList(generics.ListCreateAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+    permission_classes = [permissions.IsAuthenticated,
+                          permissions.IsAuthenticatedOrReadOnly,
                           CanCreateReview]
 
-
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user, product=Product.objects.get(id=self.kwargs['pk']))
+        #serializer.save(user=self.request.user, product=Product.objects.get(id=self.kwargs['pk']))
+        serializer.save(user=self.request.user, product=ProductLogic.get_by_id(self.kwargs['pk']))
 
     def get_queryset(self):
-        return Review.objects.filter(product=self.kwargs['pk'])
-
-
+        #return Review.objects.filter(product=self.kwargs['pk'])
+        return ReviewLogic.filter_by_product(self.kwargs['pk'])
 
 
 class APIReviewDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Review.objects.all()
+    #queryset = Review.objects.all()
+    queryset = ReviewLogic.get_all()
     serializer_class = ReviewSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, CanAlterReview]
+    permission_classes = [permissions.IsAuthenticated,
+                          permissions.IsAuthenticatedOrReadOnly, 
+                          CanAlterReview]
 
 
-
-
+# LEGACY
 class ReviewCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Review
     fields = ['rating', 'advantages', 'disadvantages', 'review']
